@@ -12,27 +12,57 @@
         </div>
       </template>
     </ApolloQuery>
-    <!--<ApolloQuery :query="require('@/graphql/queries/Books.gql')">
-      <template slot-scope="{ result: { data, loading }, isLoading }">
-        <div v-if="isLoading">Loading...</div>
-        <div v-else>
-          <div v-for="book of data.books" :key="book.id">
-            {{ book.id }}. {{ book.title }}
-          </div>
-        </div>
-      </template>
-    </ApolloQuery>-->
 
-    <ApolloQuery :query="categoryQuery" :variables="{ id: selectedCategory }">
-      <template slot-scope="{ result: { data, loading }, isLoading }">
-        <div v-if="isLoading">Loading...</div>
-        <div v-else>
-          <div v-for="book of data.category.books" :key="book.id">
-            {{ book.id }}. {{ book.title }}
+    <div v-if="selectedCategory === 'all'">
+      <ApolloQuery :query="query">
+        <template slot-scope="{ result: { data, loading }, isLoading }">
+          <div v-if="isLoading">Loading...</div>
+          <div v-else>
+            <div :to="`/books/${book.id}`" v-for="book of data.books" :key="book.id">
+              <router-link :to="`/books/${book.id}`">
+                {{ book.id }}. {{ book.title }}
+              </router-link>
+              <div>{{ book.author }}</div>
+              <img :src="`http://lar-gql-books/img/${book.image}`" alt="cover image">
+            </div>
           </div>
-        </div>
-      </template>
-    </ApolloQuery>
+        </template>
+      </ApolloQuery>
+    </div>
+
+    <div v-else-if="selectedCategory === 'featured'">
+      <ApolloQuery :query="query" :variables="{ featured: true }">
+        <template slot-scope="{ result: { data, loading }, isLoading }">
+          <div v-if="isLoading">Loading...</div>
+          <div v-else>
+            <div v-for="book of data.booksByFeatured" :key="book.id">
+              <router-link :to="`/books/${book.id}`">
+                {{ book.id }}. {{ book.title }}
+              </router-link>
+              <div>{{ book.author }}</div>
+              <img :src="`http://lar-gql-books/img/${book.image}`" alt="cover image">
+            </div>
+          </div>
+        </template>
+      </ApolloQuery>
+    </div>
+
+    <div v-else>
+      <ApolloQuery :query="query" :variables="{ id: selectedCategory }">
+        <template slot-scope="{ result: { data, loading }, isLoading }">
+          <div v-if="isLoading">Loading...</div>
+          <div v-else>
+            <div v-for="book of data.category.books" :key="book.id">
+              <router-link :to="`/books/${book.id}`">
+                {{ book.id }}. {{ book.title }}
+              </router-link>
+              <div>{{ book.author }}</div>
+              <img :src="`http://lar-gql-books/img/${book.image}`" alt="cover image">
+            </div>
+          </div>
+        </template>
+      </ApolloQuery>
+    </div>
   </div>
 </template>
 
@@ -41,6 +71,7 @@
 import categoryQuery from '@/graphql/queries/Category.gql'
 import categoriesQuery from '@/graphql/queries/Categories.gql'
 import booksQuery from '@/graphql/queries/Books.gql'
+import booksFeaturedQuery from '@/graphql/queries/BooksFeatured.gql'
 
 export default {
   name: 'home',
@@ -51,7 +82,8 @@ export default {
       categoryQuery,
       categoriesQuery,
       booksQuery,
-      selectedCategory: 1,
+      booksFeaturedQuery,
+      selectedCategory: 'all',
       query: booksQuery,
       categories: []
     }
