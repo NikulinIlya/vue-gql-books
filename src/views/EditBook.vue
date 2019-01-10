@@ -41,7 +41,6 @@
             <div class="form-group">
                 <button type="submit">Update book</button>
             </div>
-
         </form>
     </div>
 </template>
@@ -49,6 +48,7 @@
 <script>
     import updateBook from '@/graphql/mutations/UpdateBook.gql'
     import book from '@/graphql/queries/Book.gql'
+
     export default {
         data() {
             return {
@@ -58,9 +58,36 @@
                 description: '',
                 link: '',
                 featured: false,
-                category: 1
+                category: 1,
+                book: null
             }
         },
+        apollo: {
+            // Advanced query with parameters
+            // The 'variables' method is watched by vue
+            book: {
+                query: book,
+                // Reactive parameters
+                variables () {
+                    if (this.$route && this.$route.params) {
+                        return {
+                            id: this.$route.params.id
+                        }
+                    }
+                },
+                // Optional result hook
+                result ({ data: {book} }) {
+                    this.title = book.title,
+                    this.author = book.author,
+                    this.image = book.image,
+                    this.description = book.description,
+                    this.link = book.link,
+                    this.featured = book.featured,
+                    this.category = book.category.id
+                },
+            },
+        },
+
         methods: {
             editBook() {
                 this.$apollo.mutate({
