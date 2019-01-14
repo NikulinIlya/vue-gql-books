@@ -41,9 +41,56 @@
           </ApolloQuery>
         </div>
 
-        <div class="w-3/4 px-4 flex flex-wrap mb-12">
-          <div class="w-1/3 px-4 mb-12">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. A iste modi molestias, optio recusandae sapiente tenetur unde vel. Consectetur consequatur consequuntur corporis earum laborum nostrum tempora. Corporis ratione repudiandae voluptatum!
+        <div class="w-3/4 px-4 mb-12">
+          <div>
+            <ApolloQuery :query="query" v-if="selectedCategory === 'all'">
+              <template slot-scope="{ result: { data, loading }, isLoading }">
+                <div v-if="isLoading">Loading...</div>
+                <div v-else class="flex flex-wrap">
+                  <div :to="`/books/${book.id}`" v-for="book of data.books" :key="book.id" class="w-1/3 px-4 mb-12">
+                    <router-link :to="`/books/${book.id}`">
+                      <img :src="`http://lar-gql-books/img/${book.image}`" alt="cover image" class="h-64 mb-2">
+                    </router-link>
+                    <div>
+                      <router-link :to="`/books/${book.id}`" class="text-lg font-bold text-black hover:text-grey-darkest mb-1 block">
+                        {{ book.title }}
+                      </router-link>
+                      <div class="text-grey-darkest">{{ book.author }}</div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </ApolloQuery>
+
+            <ApolloQuery :query="query" :variables="{ featured: true }" v-else-if="selectedCategory === 'featured'">
+              <template slot-scope="{ result: { data, loading }, isLoading }">
+                <div v-if="isLoading">Loading...</div>
+                <div v-else class="flex flex-wrap">
+                  <div v-for="book of data.booksByFeatured" :key="book.id" class="w-1/3 px-4 mb-12">
+                    <router-link :to="`/books/${book.id}`">
+                      {{ book.id }}. {{ book.title }}
+                    </router-link>
+                    <div>{{ book.author }}</div>
+                    <img :src="`http://lar-gql-books/img/${book.image}`" alt="cover image">
+                  </div>
+                </div>
+              </template>
+            </ApolloQuery>
+
+            <ApolloQuery :query="query" :variables="{ id: selectedCategory }" v-else>
+              <template slot-scope="{ result: { data, loading }, isLoading }">
+                <div v-if="isLoading">Loading...</div>
+                <div v-else class="flex flex-wrap">
+                  <div v-for="book of data.category.books" :key="book.id" class="w-1/3 px-4 mb-12">
+                    <router-link :to="`/books/${book.id}`">
+                      {{ book.id }}. {{ book.title }}
+                    </router-link>
+                    <div>{{ book.author }}</div>
+                    <img :src="`http://lar-gql-books/img/${book.image}`" alt="cover image">
+                  </div>
+                </div>
+              </template>
+            </ApolloQuery>
           </div>
         </div>
       </div>
