@@ -13,6 +13,10 @@
  */
 @tailwind preflight;
 
+a {
+    text-decoration: none;
+}
+
 /**
  * This injects any component classes registered by plugins.
  *
