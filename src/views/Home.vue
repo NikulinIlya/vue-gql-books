@@ -47,16 +47,8 @@
               <template slot-scope="{ result: { data, loading }, isLoading }">
                 <div v-if="isLoading">Loading...</div>
                 <div v-else class="flex flex-wrap">
-                  <div :to="`/books/${book.id}`" v-for="book of data.books" :key="book.id" class="w-1/3 px-4 mb-12">
-                    <router-link :to="`/books/${book.id}`">
-                      <img :src="`http://lar-gql-books/img/${book.image}`" alt="cover image" class="h-64 mb-2">
-                    </router-link>
-                    <div>
-                      <router-link :to="`/books/${book.id}`" class="text-lg font-bold text-black hover:text-grey-darkest mb-1 block">
-                        {{ book.title }}
-                      </router-link>
-                      <div class="text-grey-darkest">{{ book.author }}</div>
-                    </div>
+                  <div v-for="book of data.books" :key="book.id" class="w-1/3 px-4 mb-12">
+                    <book-listing :book="book"></book-listing>
                   </div>
                 </div>
               </template>
@@ -67,11 +59,7 @@
                 <div v-if="isLoading">Loading...</div>
                 <div v-else class="flex flex-wrap">
                   <div v-for="book of data.booksByFeatured" :key="book.id" class="w-1/3 px-4 mb-12">
-                    <router-link :to="`/books/${book.id}`">
-                      {{ book.id }}. {{ book.title }}
-                    </router-link>
-                    <div>{{ book.author }}</div>
-                    <img :src="`http://lar-gql-books/img/${book.image}`" alt="cover image">
+                    <book-listing :book="book"></book-listing>
                   </div>
                 </div>
               </template>
@@ -82,11 +70,7 @@
                 <div v-if="isLoading">Loading...</div>
                 <div v-else class="flex flex-wrap">
                   <div v-for="book of data.category.books" :key="book.id" class="w-1/3 px-4 mb-12">
-                    <router-link :to="`/books/${book.id}`">
-                      {{ book.id }}. {{ book.title }}
-                    </router-link>
-                    <div>{{ book.author }}</div>
-                    <img :src="`http://lar-gql-books/img/${book.image}`" alt="cover image">
+                    <book-listing :book="book"></book-listing>
                   </div>
                 </div>
               </template>
@@ -158,10 +142,12 @@ import categoryQuery from '@/graphql/queries/Category.gql'
 import categoriesQuery from '@/graphql/queries/Categories.gql'
 import booksQuery from '@/graphql/queries/Books.gql'
 import booksFeaturedQuery from '@/graphql/queries/BooksFeatured.gql'
+import bookListing from '@/components/BookListing.vue'
 
 export default {
   name: 'home',
   components: {
+    bookListing
   },
   data() {
     return {
