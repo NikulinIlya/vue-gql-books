@@ -7,11 +7,20 @@
           <div>
             <img :src="`http://lar-gql-books/img/${data.book.image}`" alt="book cover">
           </div>
-          <div>{{ data.book.title }}</div>
-          <div>{{ data.book.author }}</div>
+
+          <div class="w-full lg:w-2/3 ml-0 mt-8 lg:mt-0 lg:ml-16">
+            <div class="text-4xl font-bold">{{ data.book.title }}</div>
+            <div class="text-2xl text-grey-darkest mb-8">{{ data.book.author }}</div>
+            <div class="text-lg text-grey-darkest leading-normal">{{ data.book.description }}</div>
+            <div class="my-12">
+              <a :href="data.book.link" target="_blank" class="border border-purple-dark border-solid rounded text-purple-dark px-4 py-4 hover:bg-purple hover:text-white">View Link</a>
+            </div>
+            <router-link :to="`/books/${data.book.id}/edit`" class="">Edit</router-link>
+            &middot;
+            <a href="#" class="" @click.prevent="deleteBook">Delete</a>
+          </div>
           <div>
-            <router-link :to="`/books/${data.book.id}/edit`" class="link-margin">Edit</router-link>
-            <a href="#" class="link-margin" @click.prevent="deleteBook">Delete</a>
+
           </div>
         </div>
       </template>
