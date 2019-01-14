@@ -16,19 +16,41 @@
       </div>
     </div> <!-- end hero -->
 
-    <router-link to="/books/add">Add a book</router-link>
-    <ApolloQuery :query="categoriesQuery">
-      <template slot-scope="{ result: { data, loading }, isLoading }">
-        <div v-if="isLoading">Loading...</div>
-        <div v-else>
-          <a href="#" class="link-margin" @click.prevent="selectCategory('all')">All</a>
-          <a href="#" class="link-margin" @click.prevent="selectCategory('featured')">Featured</a>
-          <a href="#" v-for="category of data.categories" :key="category.id" @click.prevent="selectCategory(category.id)" class="link-margin">
-            {{ category.id }}. {{ category.name }}
-          </a>
+    <div class="container">
+      <div class="flex flex-wrap -mx-4">
+        <div class="w-1/4 px-4 mb-12">
+          <ApolloQuery :query="categoriesQuery">
+            <template slot-scope="{ result: { data, loading }, isLoading }">
+              <div v-if="isLoading">Loading...</div>
+              <ul v-else class="list-reset text-lg">
+                <li class="mb-6">
+                  <a href="#" class="text-black hover:text-grey-darkest" @click.prevent="selectCategory('all')">All</a>
+                </li>
+                <li class="mb-6">
+                  <a href="#" class="text-black hover:text-grey-darkest" @click.prevent="selectCategory('featured')">Featured</a>
+                </li>
+                <li v-for="category of data.categories" :key="category.id"
+                     @click.prevent="selectCategory(category.id)" class="mb-6">
+                  <a href="#" class="text-black hover:text-grey-darkest">{{ category.name }}</a>
+                </li>
+                <li class="mb-6">
+                  <router-link to="/books/add" class="text-black hover:text-grey-darkest">Add a book</router-link>
+                </li>
+              </ul>
+            </template>
+          </ApolloQuery>
         </div>
-      </template>
-    </ApolloQuery>
+
+        <div class="w-3/4 px-4 flex flex-wrap mb-12">
+          <div class="w-1/3 px-4 mb-12">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. A iste modi molestias, optio recusandae sapiente tenetur unde vel. Consectetur consequatur consequuntur corporis earum laborum nostrum tempora. Corporis ratione repudiandae voluptatum!
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
 
     <div v-if="selectedCategory === 'all'">
       <ApolloQuery :query="query">
